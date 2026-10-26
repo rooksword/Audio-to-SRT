@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Audio → SRT</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Audio → SRT</h1>
+    <p class="muted">Transcribe WAV or MP3 into subtitles with word-accurate timestamps. Runs entirely in your browser; your audio never leaves your machine.</p>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>1. Audio</h2>
+      <label id="drop" class="drop">
+        <input id="file" type="file" accept=".wav,.mp3,audio/wav,audio/x-wav,audio/mpeg" hidden />
+        <span id="dropText">Drop a .wav or .mp3 here, or click to choose</span>
+      </label>
+      <audio id="player" controls hidden></audio>
+
+      <div class="row">
+        <label>Model
+          <select id="model">
+            <option value="onnx-community/whisper-tiny_timestamped">Tiny (fastest, ~40 MB)</option>
+            <option value="onnx-community/whisper-base_timestamped" selected>Base (balanced, ~80 MB)</option>
+            <option value="onnx-community/whisper-small_timestamped">Small (most accurate, ~250 MB)</option>
+          </select>
+        </label>
+        <label>Language
+          <select id="language">
+            <option value="">Auto-detect</option>
+            <option value="english">English</option>
+            <option value="spanish">Spanish</option>
+            <option value="french">French</option>
+            <option value="german">German</option>
+            <option value="italian">Italian</option>
+            <option value="portuguese">Portuguese</option>
+            <option value="dutch">Dutch</option>
+            <option value="japanese">Japanese</option>
+            <option value="chinese">Chinese</option>
+          </select>
+        </label>
+        <button id="transcribe" disabled>Transcribe</button>
+      </div>
+
+      <div id="progressWrap" hidden>
+        <progress id="progress" max="100"></progress>
+        <span id="status" class="muted"></span>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>2. Line layout</h2>
+      <div class="row">
+        <label class="grow">Max characters per line: <strong id="maxCharsOut">42</strong>
+          <input id="maxChars" type="range" min="10" max="80" value="42" />
+        </label>
+        <label>Lines per subtitle
+          <select id="maxLines">
+            <option value="1">1</option>
+            <option value="2" selected>2</option>
+            <option value="3">3</option>
+          </select>
+        </label>
+      </div>
+      <div class="row">
+        <label class="check"><input id="sentenceBreak" type="checkbox" checked /> New subtitle after each sentence</label>
+        <label class="check"><input id="pauseBreak" type="checkbox" checked /> New subtitle after pauses longer than
+          <input id="pauseSec" type="number" min="0.1" max="5" step="0.1" value="0.8" /> s</label>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="preview-head">
+        <h2>3. Preview</h2>
+        <span id="stats" class="muted"></span>
+        <button id="download" disabled>Download .srt</button>
+      </div>
+      <p id="sampleNote" class="muted">Showing sample text. Transcribe a file to preview your own subtitles.</p>
+      <ol id="cues" class="cues"></ol>
+    </section>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
